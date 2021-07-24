@@ -18,3 +18,6 @@ For Filebeat -> ./filebeat -e
 
 
 For Logstash -> ./logstash -f logstash.conf
+
+
+**Note** - In order for both the client and server docker images to properly work , ensure both client and server machines are on same timezone and same time.
