@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  heartbeat:
+    image: abhilashpatil/heartbeat:2.0
+    container_name: heartbeat_container
+    environment:
+      - POM_SERVER=10.133.73.92
+      - ElasticSearch_Server=10.133.73.91
+      - Kibana_Server=10.133.73.91
+
+  filebeat:
+    image: abhilashpatil/filebeat:2.0
+    container_name: filebeat_container
+    environment:
+      - LogStash_Server=10.133.73.91
+    volumes:
+      - /opt/Avaya/avpom/POManager/logs:/opt/Avaya/avpom/POManager/logs
+
+  metricbeat:
+    image: abhilashpatil/metricbeat:2.0
+    container_name: metricbeat_container
+    environment:
+      - ElasticSearch_Server=10.133.73.91
+      - Kibana_Server=10.133.73.91
+    network_mode: "host"
+    volumes:
+      - /proc:/hostfs/proc:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /:/hostfs:ro
+
+volumes:
+  elasticsearch:
+    driver: local

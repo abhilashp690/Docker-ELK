@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  elasticsearch:
+    image: abhilashpatil/elasticsearch:2.0
+    container_name: elasticsearch
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+      - cluster.routing.allocation.disk.threshold_enabled=false
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+
+
+  kibana:
+    image: abhilashpatil/kibana:2.0
+    container_name: kibana_container
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+  logstash:
+    image: abhilashpatil/logstash:2.0
+    container_name: logstash_container
+    ports:
+      - "5044:5044"
+    depends_on:
+      - elasticsearch
+volumes:
+  elasticsearch:
+    driver: local
